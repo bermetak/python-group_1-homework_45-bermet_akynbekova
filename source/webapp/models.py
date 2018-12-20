@@ -37,11 +37,7 @@ class Order(models.Model):
     courier = models.ForeignKey(User, null=True, blank=True, related_name='delivered', verbose_name='Курьер', on_delete=models.PROTECT)
 
 
-class OrderFoods(models.Model):
+class OrderFood(models.Model):
     order = models.ForeignKey(Order, related_name='foods', verbose_name='Заказ', on_delete=models.PROTECT)
     food = models.ForeignKey(Food, related_name='+', verbose_name='Блюдо', on_delete=models.PROTECT)
     amount = models.IntegerField(verbose_name='Количество')
-
-
-# order.foods.first().food.name
-# order.foods.first().amount

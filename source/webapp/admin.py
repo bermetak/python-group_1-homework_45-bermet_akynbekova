@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
-from webapp.models import Employee, Food, Order, OrderFoods
+from webapp.models import Employee, Food, Order, OrderFood
 
 
 class EmployeeInline(admin.StackedInline):
@@ -13,7 +13,7 @@ class EmployeeAdmin(UserAdmin):
 
 
 class OrderFoodsInline(admin.TabularInline):
-    model = OrderFoods
+    model = OrderFood
     fields = ['food', 'amount']
 
 
