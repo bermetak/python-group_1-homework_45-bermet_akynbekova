@@ -32,6 +32,9 @@ class Order(models.Model):
     contact_phone = models.CharField(max_length=50, verbose_name='Контактный телефон')
     contact_name = models.CharField(max_length=100, verbose_name='Имя клиента')
     delivery_address = models.CharField(max_length=200, null=True, blank=True, verbose_name='Адрес доставки')
+    status = models.CharField(max_length=20, default=STATUS_NEW, verbose_name='Статус', choices=STATUS_CHOICES)
+    operator = models.ForeignKey(User, null=True, blank=True, related_name='orders', verbose_name='Оператор', on_delete=models.PROTECT)
+    courier = models.ForeignKey(User, null=True, blank=True, related_name='delivered', verbose_name='Курьер', on_delete=models.PROTECT)
 
 
 class OrderFoods(models.Model):
