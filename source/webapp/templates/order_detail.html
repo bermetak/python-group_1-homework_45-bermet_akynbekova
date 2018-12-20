@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Заказ{% endblock %}
+{% block content %}
+    {{ order.contact_phone }}
+    {% for order_food in order.foods.all %}
+        {{ order_food.food.name }}
+    {% endfor %}
+{% endblock %}
+
+{# Откройте /order/<pk>, чтобы посмотреть список блюд для заказа на этой странице #}
