@@ -2,21 +2,21 @@
 {% block title %}Заказ{% endblock %}
 {% block content %}
     <h1 class="mt-3 mb-3">Заказ № {{ order.pk }}</h1>
-    <h5>Статус: {{ order.status }}</h5>
+    <a href="{% url 'order_update' order.pk %}">Изменить заказ</a>
+    <a href="{% url 'order_cancel' order.pk %}">Отменить заказ</a>
+    <h5>Статус: {{ order.get_status_display }}</h5>
     Клиент:
     {{ order.contact_name }}
     {{ order.contact_phone }}
     <br>
     Адрес: {{ order.delivery_address }}
     <hr>
-    Оператор: {{ order.operator }}
+    Оператор: {{ order.operator.employee.user.first_name }} {{ order.operator.employee.user.last_name }}
     <br>
-    Курьер: {{ order.courier }}
+    Курьер: {{ order.courier.employee.user.first_name }} {{ order.courier.employee.user.last_name }}
     <hr>
     <h3>Блюда:</h3>
     {% for order_food in order.foods.all %}
         {{ order_food.food.name }} - {{ order_food.amount }}<br>
     {% endfor %}
 {% endblock %}
-
-{# Откройте /order/<pk>, чтобы посмотреть список блюд для заказа на этой странице #}

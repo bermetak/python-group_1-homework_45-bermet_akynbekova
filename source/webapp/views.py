@@ -1,5 +1,6 @@
 from django.views.generic import DetailView, CreateView, UpdateView, View, DeleteView, ListView
-from django.urls import reverse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
 from webapp.models import Food, Order, OrderFood, Employee
 from webapp.forms import FoodForm, OrderForm, OrderFoodForm
@@ -26,11 +27,33 @@ class UserListView(ListView):
     model = Employee
     template_name = 'user_list.html'
 
-
+class FoodListView(ListView):
+    model = Food
+    template_name = 'food_list.html'
 
 class OrderDetailView(DetailView):
     model = Order
     template_name = 'order_detail.html'
+
+
+class OrderCancelView(View):
+    model = Order
+    template_name = 'order_cancel.html'
+
+
+    def get(self, request, pk):
+        order = get_object_or_404(Order, pk=pk)
+
+        if request.method == 'GET':
+            return render(request, 'order_cancel.html', {'order': order})
+
+        elif request.method == 'POST':
+            # if request.POST.get('cancel') == 'yes':
+            order.status = 'STATUS_CANCELED'
+            order.save()
+            return redirect('order_list')
+
+
 
 
 class OrderUpdateView(UpdateView):
@@ -80,27 +103,9 @@ def order_reject_view(request, *args, **kwargs):
     pass
 
 
-# классовое на базе View
-class OrderRejectView(View):
-    def get(self, *args, **kwargs):
-        # найти заказ
-        # поменять статус на canceled
-        # сохранить заказ
-        # сделать редирект на список заказов
-        pass
 
 
-# классовое на базе DeleteView с выводом страницы подтверждения
-class OrderRejectViewV2(DeleteView):
-    model = OrderUpdateView
-    template_name = 'order_cancel.html'
 
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        success_url = self.get_success_url()
-        # поменять статус на canceled
-        # сохранить заказ
-        return HttpResponseRedirect(success_url)
 
 
 # Представления для создания заказа

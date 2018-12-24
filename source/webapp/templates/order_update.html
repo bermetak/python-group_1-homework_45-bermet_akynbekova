@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Добавить заказ{% endblock %}
+{% block title %}Изменить заказ № {{ order.pk }}{% endblock %}
 
 {% block content %}
     {# Не выводить форму, если статус связанного заказа "Доставлен" или "Доставляется" #}
