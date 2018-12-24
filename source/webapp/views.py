@@ -19,9 +19,7 @@ class FoodCreateView(CreateView):
     def get_success_url(self):
         return reverse('food_detail', kwargs={'pk': self.object.pk})
 
-class OrderListView(ListView):
-    model = Order
-    template_name = 'order_list.html'
+
 
 class UserListView(ListView):
     model = Employee
@@ -46,10 +44,23 @@ class FoodDeleteView(DeleteView):
     def get_success_url(self):
         return reverse ('food_list')
 
+
+
+class OrderListView(ListView):
+    model = Order
+    template_name = 'order_list.html'
+
+class OrderCreateView(CreateView):
+    model = Order
+    template_name = 'order_create.html'
+    form_class = OrderForm
+
+    def get_success_url(self):
+        return reverse('order_detail', kwargs={'pk': self.object.pk})
+
 class OrderDetailView(DetailView):
     model = Order
     template_name = 'order_detail.html'
-
 
 class OrderCancelView(View):
     model = Order
@@ -64,7 +75,6 @@ class OrderCancelView(View):
         order.status = 'STATUS_CANCELED'
         order.save()
         return redirect('order_list')
-
 
 class OrderUpdateView(UpdateView):
     model = Order
@@ -102,30 +112,12 @@ class OrderDeliverView(View):
         pass
 
 
-# Варианты представления для отмены заказов
-# (в коде оставьте один)
-# обычное - представление-функция
-def order_reject_view(request, *args, **kwargs):
-    # найти заказ
-    # поменять статус на canceled
-    # сохранить заказ
-    # сделать редирект на список заказов
-    pass
 
 
 
 
 
 
-
-# Представления для создания заказа
-class OrderCreateView(CreateView):
-    model = Order
-    template_name = 'order_create.html'
-    form_class = OrderForm
-
-    def get_success_url(self):
-        return reverse('order_detail', kwargs={'pk': self.object.pk})
 
 
 # ... и для добавления блюд в заказ
@@ -134,17 +126,20 @@ class OrderFoodCreateView(CreateView):
     form_class = OrderFoodForm
     template_name = 'order_food_create.html'
 
-    def get_success_url(self):
-        return reverse('order_detail', kwargs={'pk': self.object.order.pk})
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['order'] = Order.objects.get(pk=self.kwargs.get('pk'))
         return context
 
-    # Здесь нужен метод get_form_valid, который будет добавлять
-    # в объект OrderFood из формы ссылку на заказ
-    # по примеру из вебинара для бонуса в дз #43.
+
+    def form_valid(self, form):
+        form.instance.order = Order.objects.get(pk=self.kwargs.get('pk'))
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('order_detail', kwargs={'pk': self.object.order.pk})
+
+
 
 
 class OrderFoodDeleteView(DeleteView):
