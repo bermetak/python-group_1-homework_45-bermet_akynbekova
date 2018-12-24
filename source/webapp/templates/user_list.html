@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Список пользователей{% endblock %}
+{% block content %}
+<h1 class="mt-3 mb-3">Список пользователей</h1>
+    {% for user in employee_list %}
+
+
+                <h3>
+                {{ user.pk }}
+        {{ user.user.first_name }}
+                    {{ user.user.last_name }}
+        {{ user.phone }}
+                    {{ user.user.group }}
+
+                    </h3>
+
+
+    {% endfor %}
+{% endblock %}
+

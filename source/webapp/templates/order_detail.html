@@ -1,9 +1,21 @@
 {% extends 'base.html' %}
 {% block title %}Заказ{% endblock %}
 {% block content %}
+    <h1 class="mt-3 mb-3">Заказ № {{ order.pk }}</h1>
+    <h5>Статус: {{ order.status }}</h5>
+    Клиент:
+    {{ order.contact_name }}
     {{ order.contact_phone }}
+    <br>
+    Адрес: {{ order.delivery_address }}
+    <hr>
+    Оператор: {{ order.operator }}
+    <br>
+    Курьер: {{ order.courier }}
+    <hr>
+    <h3>Блюда:</h3>
     {% for order_food in order.foods.all %}
-        {{ order_food.food.name }}
+        {{ order_food.food.name }} - {{ order_food.amount }}<br>
     {% endfor %}
 {% endblock %}
 

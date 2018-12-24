@@ -1,7 +1,7 @@
 from django.views.generic import DetailView, CreateView, UpdateView, View, DeleteView, ListView
 from django.urls import reverse
 from django.http import HttpResponseRedirect
-from webapp.models import Food, Order, OrderFood
+from webapp.models import Food, Order, OrderFood, Employee
 from webapp.forms import FoodForm, OrderForm, OrderFoodForm
 
 
@@ -21,6 +21,12 @@ class FoodCreateView(CreateView):
 class OrderListView(ListView):
     model = Order
     template_name = 'order_list.html'
+
+class UserListView(ListView):
+    model = Employee
+    template_name = 'user_list.html'
+
+
 
 class OrderDetailView(DetailView):
     model = Order
