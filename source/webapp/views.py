@@ -1,4 +1,4 @@
-from django.views.generic import DetailView, CreateView, UpdateView, View, DeleteView
+from django.views.generic import DetailView, CreateView, UpdateView, View, DeleteView, ListView
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from webapp.models import Food, Order, OrderFood
@@ -18,6 +18,9 @@ class FoodCreateView(CreateView):
     def get_success_url(self):
         return reverse('food_detail', kwargs={'pk': self.object.pk})
 
+class OrderListView(ListView):
+    model = Order
+    template_name = 'order_list.html'
 
 class OrderDetailView(DetailView):
     model = Order
