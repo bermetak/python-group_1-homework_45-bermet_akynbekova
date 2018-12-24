@@ -9,9 +9,7 @@
     {% else %}
         <form action="{% url 'order_cancel' order.pk %}" method="post">
         {% csrf_token %}
-    <h1>Подтвердите отмену Заказа № {{ order.pk }}?</h1>
-{#        <input type="radio" value="yes" name="cancel"> Да<br>#}
-{#        <input type="radio" value="no" checked name="cancel"> Нет<br>#}
+            <h1>Подтвердите отмену Заказа № {{ order.pk }}?</h1>
             <button type="submit" class="btn btn-primary">Подтвердить</button>
         </form>
     {% endif %}

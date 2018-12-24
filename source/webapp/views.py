@@ -31,6 +31,21 @@ class FoodListView(ListView):
     model = Food
     template_name = 'food_list.html'
 
+class FoodUpdateView(UpdateView):
+    model = Food
+    template_name = 'food_update.html'
+    form_class = FoodForm
+
+    def get_success_url(self):
+        return reverse('food_detail', kwargs={'pk': self.object.pk})
+
+class FoodDeleteView(DeleteView):
+    model = Food
+    template_name = 'food_delete.html'
+
+    def get_success_url(self):
+        return reverse ('food_list')
+
 class OrderDetailView(DetailView):
     model = Order
     template_name = 'order_detail.html'
@@ -40,20 +55,15 @@ class OrderCancelView(View):
     model = Order
     template_name = 'order_cancel.html'
 
-
     def get(self, request, pk):
         order = get_object_or_404(Order, pk=pk)
+        return render(request, 'order_cancel.html', {'order': order})
 
-        if request.method == 'GET':
-            return render(request, 'order_cancel.html', {'order': order})
-
-        elif request.method == 'POST':
-            # if request.POST.get('cancel') == 'yes':
-            order.status = 'STATUS_CANCELED'
-            order.save()
-            return redirect('order_list')
-
-
+    def post(self, request, pk):
+        order = get_object_or_404(Order, pk=pk)
+        order.status = 'STATUS_CANCELED'
+        order.save()
+        return redirect('order_list')
 
 
 class OrderUpdateView(UpdateView):
