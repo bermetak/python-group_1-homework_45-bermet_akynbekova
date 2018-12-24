@@ -10,6 +10,7 @@
     {{ order.contact_phone }}
     <br>
     Адрес: {{ order.delivery_address }}
+    <a href="{% url 'order_deliver' order.pk %}">Доставить заказ</a>
     <hr>
     Оператор: {{ order.operator.employee.user.first_name }} {{ order.operator.employee.user.last_name }}
     <br>

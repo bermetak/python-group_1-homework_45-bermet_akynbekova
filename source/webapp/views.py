@@ -72,7 +72,7 @@ class OrderCancelView(View):
 
     def post(self, request, pk):
         order = get_object_or_404(Order, pk=pk)
-        order.status = 'STATUS_CANCELED'
+        order.status = 'canceled'
         order.save()
         return redirect('order_list')
 
@@ -104,26 +104,22 @@ class OrderDeliverView(View):
     model = Order
     template_name = 'order_deliver.html'
 
-    def get(self, *args, **kwargs):
-        # найти заказ
-        # если статус "Готовится", то
-            # поменять статус на "В пути"
-        # если статус "В пути", то
-            # поменять статус на "Доставлено"
-        # сохранить заказ
-        # сделать редирект на список заказов
-        pass
-
     def get(self, request, pk):
         order = get_object_or_404(Order, pk=pk)
-
-        return render(request, 'order_cancel.html', {'order': order})
-
-    def post(self, request, pk):
-        order = get_object_or_404(Order, pk=pk)
-        order.status = 'STATUS_CANCELED'
+        if order.status == 'preparing':
+            order.status = 'on_way'
+        elif order.status == 'on_way':
+            order.status = 'delivered'
         order.save()
         return redirect('order_list')
+
+    #
+    #
+    # def post(self, request, pk):
+    #     order = get_object_or_404(Order, pk=pk)
+    #     order.status = 'STATUS_CANCELED'
+    #     order.save()
+    #     return redirect('order_list')
 
 
 class OrderFoodCreateView(CreateView):
