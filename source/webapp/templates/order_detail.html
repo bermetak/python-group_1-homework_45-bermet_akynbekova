@@ -17,8 +17,11 @@
     <hr>
     <h3>Блюда:</h3>
     <a href="{% url 'order_food_create' order.pk %}">Добавить блюда</a>
+
     <br>
     {% for order_food in order.foods.all %}
-        {{ order_food.food.name }} - {{ order_food.amount }}<br>
+        {{ order_food.food.name }} - {{ order_food.amount }}
+        <a href="{% url 'order_food_delete' order_food.pk %}">Удалить</a>
+        <br>
     {% endfor %}
 {% endblock %}

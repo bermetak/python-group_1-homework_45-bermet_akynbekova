@@ -101,6 +101,9 @@ def order_deliver_view(request, *args, **kwargs):
 
 # классовое на базе View
 class OrderDeliverView(View):
+    model = Order
+    template_name = 'order_deliver.html'
+
     def get(self, *args, **kwargs):
         # найти заказ
         # если статус "Готовится", то
@@ -111,16 +114,18 @@ class OrderDeliverView(View):
         # сделать редирект на список заказов
         pass
 
+    def get(self, request, pk):
+        order = get_object_or_404(Order, pk=pk)
+
+        return render(request, 'order_cancel.html', {'order': order})
+
+    def post(self, request, pk):
+        order = get_object_or_404(Order, pk=pk)
+        order.status = 'STATUS_CANCELED'
+        order.save()
+        return redirect('order_list')
 
 
-
-
-
-
-
-
-
-# ... и для добавления блюд в заказ
 class OrderFoodCreateView(CreateView):
     model = OrderFood
     form_class = OrderFoodForm
@@ -131,7 +136,6 @@ class OrderFoodCreateView(CreateView):
         context['order'] = Order.objects.get(pk=self.kwargs.get('pk'))
         return context
 
-
     def form_valid(self, form):
         form.instance.order = Order.objects.get(pk=self.kwargs.get('pk'))
         return super().form_valid(form)
@@ -139,12 +143,18 @@ class OrderFoodCreateView(CreateView):
     def get_success_url(self):
         return reverse('order_detail', kwargs={'pk': self.object.order.pk})
 
-
-
-
 class OrderFoodDeleteView(DeleteView):
-    # Доработайте это представление (удаление блюда из заказа).
-    # В шаблоне вы также не должны выводить форму, как и в order_food_create.html
-    # Если статус заказа - доставлен или в пути
-
     model = OrderFood
+    template_name = 'order_food_delete.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['order_food'] = OrderFood.objects.get(pk=self.kwargs.get('pk'))
+        return context
+
+    def form_valid(self, form):
+        form.instance.order_food = OrderFood.objects.get(pk=self.kwargs.get('pk'))
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('order_detail', kwargs={'pk': self.object.order.pk})

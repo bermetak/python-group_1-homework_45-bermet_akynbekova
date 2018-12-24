@@ -19,7 +19,8 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 from webapp.views import FoodDetailView, OrderDetailView, OrderCreateView, FoodCreateView, OrderUpdateView, \
-    OrderFoodCreateView, OrderListView, UserListView, FoodListView, OrderCancelView, FoodUpdateView, FoodDeleteView
+    OrderFoodCreateView, OrderListView, UserListView, FoodListView, OrderCancelView, FoodUpdateView, FoodDeleteView, \
+    OrderFoodDeleteView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,7 +35,8 @@ urlpatterns = [
     path('order/create', OrderCreateView.as_view(), name='order_create'),
     path('order/<int:pk>/update', OrderUpdateView.as_view(), name='order_update'),
     path('order/<int:pk>/cancel', OrderCancelView.as_view(), name='order_cancel'),
-    path('order/<int:pk>/food/create', OrderFoodCreateView.as_view(), name='order_food_create')
+    path('order/<int:pk>/food/create', OrderFoodCreateView.as_view(), name='order_food_create'),
+    path('order_food/<int:pk>/delete', OrderFoodDeleteView.as_view(), name='order_food_delete')
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
