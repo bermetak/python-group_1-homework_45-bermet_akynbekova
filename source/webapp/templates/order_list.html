@@ -2,10 +2,10 @@
 {% block title %}Список заказов{% endblock %}
 {% block content %}
 <h1 class="mt-3 mb-3">Список заказов</h1>
-    <a href="{% url 'order_create' %}">Добавить заказ</a>
+    <a href="{% url 'webapp:order_create' %}">Добавить заказ</a>
     {% for order in order_list %}
 
-            <a href="{% url 'order_detail' order.pk %}">
+            <a href="{% url 'webapp:order_detail' order.pk %}">
                 <h3>
                 Заказ № {{ order.pk }} - {{ order.get_status_display }}
                     </h3>

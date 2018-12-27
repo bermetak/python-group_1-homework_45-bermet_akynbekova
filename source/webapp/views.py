@@ -6,6 +6,10 @@ from webapp.models import Food, Order, OrderFood, Employee
 from webapp.forms import FoodForm, OrderForm, OrderFoodForm
 
 
+class UserListView(ListView):
+    model = Employee
+    template_name = 'user_list.html'
+
 class FoodDetailView(DetailView):
     model = Food
     template_name = 'food_detail.html'
@@ -17,13 +21,7 @@ class FoodCreateView(CreateView):
     form_class = FoodForm
 
     def get_success_url(self):
-        return reverse('food_detail', kwargs={'pk': self.object.pk})
-
-
-
-class UserListView(ListView):
-    model = Employee
-    template_name = 'user_list.html'
+        return reverse('webapp:food_detail', kwargs={'pk': self.object.pk})
 
 class FoodListView(ListView):
     model = Food
@@ -35,15 +33,14 @@ class FoodUpdateView(UpdateView):
     form_class = FoodForm
 
     def get_success_url(self):
-        return reverse('food_detail', kwargs={'pk': self.object.pk})
+        return reverse('webapp:food_detail', kwargs={'pk': self.object.pk})
 
 class FoodDeleteView(DeleteView):
     model = Food
     template_name = 'food_delete.html'
 
     def get_success_url(self):
-        return reverse ('food_list')
-
+        return reverse ('webapp:food_list')
 
 
 class OrderListView(ListView):
@@ -56,7 +53,7 @@ class OrderCreateView(CreateView):
     form_class = OrderForm
 
     def get_success_url(self):
-        return reverse('order_detail', kwargs={'pk': self.object.pk})
+        return reverse('webapp:order_detail', kwargs={'pk': self.object.pk})
 
 class OrderDetailView(DetailView):
     model = Order
@@ -74,7 +71,7 @@ class OrderCancelView(View):
         order = get_object_or_404(Order, pk=pk)
         order.status = 'canceled'
         order.save()
-        return redirect('order_list')
+        return redirect('webapp:order_list')
 
 class OrderUpdateView(UpdateView):
     model = Order
@@ -82,27 +79,13 @@ class OrderUpdateView(UpdateView):
     form_class = OrderForm
 
     def get_success_url(self):
-        return reverse('order_detail', kwargs={'pk': self.object.pk})
-
-
-# Варианты представления для курьеров (взять заказ/доставить заказ)
-# (в коде оставьте один)
-# обычное - представление-функция
-def order_deliver_view(request, *args, **kwargs):
-    # найти заказ
-    # если статус "Готовится", то
-        # поменять статус на "В пути"
-    # если статус "В пути", то
-        # поменять статус на "Доставлено"
-    # сохранить заказ
-    # сделать редирект на список заказов
-    pass
+        return reverse('webapp:order_detail', kwargs={'pk': self.object.pk})
 
 
 # классовое на базе View
 class OrderDeliverView(View):
     model = Order
-    template_name = 'order_deliver.html'
+    # template_name = 'order_deliver.html'
 
     def get(self, request, pk):
         order = get_object_or_404(Order, pk=pk)
@@ -111,15 +94,8 @@ class OrderDeliverView(View):
         elif order.status == 'on_way':
             order.status = 'delivered'
         order.save()
-        return redirect('order_list')
+        return redirect('webapp:order_list')
 
-    #
-    #
-    # def post(self, request, pk):
-    #     order = get_object_or_404(Order, pk=pk)
-    #     order.status = 'STATUS_CANCELED'
-    #     order.save()
-    #     return redirect('order_list')
 
 
 class OrderFoodCreateView(CreateView):
@@ -137,7 +113,7 @@ class OrderFoodCreateView(CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('order_detail', kwargs={'pk': self.object.order.pk})
+        return reverse('webapp:order_detail', kwargs={'pk': self.object.order.pk})
 
 class OrderFoodDeleteView(DeleteView):
     model = OrderFood
@@ -153,4 +129,4 @@ class OrderFoodDeleteView(DeleteView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('order_detail', kwargs={'pk': self.object.order.pk})
+        return reverse('webapp:order_detail', kwargs={'pk': self.object.order.pk})

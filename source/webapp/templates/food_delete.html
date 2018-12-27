@@ -5,9 +5,9 @@
 {% block content %}
 
 
-        <form action="{% url 'food_delete' food.pk %}" method="post">
+        <form action="{% url 'webapp:food_delete' food.pk %}" method="post">
             {% csrf_token %}
-            <h1>Удалить блюдо {{ food.name }}?</h1>
+            <h1>Удалить блюдо {{ order.foods.name }}?</h1>
 
 
             <button type="submit" class="btn btn-primary">Удалить</button>
