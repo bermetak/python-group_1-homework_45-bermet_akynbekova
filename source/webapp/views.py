@@ -115,6 +115,24 @@ class OrderFoodCreateView(CreateView):
     def get_success_url(self):
         return reverse('webapp:order_detail', kwargs={'pk': self.object.order.pk})
 
+class OrderFoodUpdateView(UpdateView):
+    model = OrderFood
+    form_class = OrderFoodForm
+    template_name = 'order_food_update.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['order_food'] = OrderFood.objects.get(pk=self.kwargs.get('pk'))
+        return context
+
+    def form_valid(self, form):
+        form.instance.order_food = OrderFood.objects.get(pk=self.kwargs.get('pk'))
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('webapp:order_detail', kwargs={'pk': self.object.order.pk})
+
+
 class OrderFoodDeleteView(DeleteView):
     model = OrderFood
     template_name = 'order_food_delete.html'

@@ -18,3 +18,5 @@ class OrderFoodForm(forms.ModelForm):
     class Meta:
         model = OrderFood
         exclude = ['order']
+
+

@@ -29,7 +29,10 @@
 
     <br>
     {% for order_food in order.foods.all %}
-        {{ order_food.food.name }} - {{ order_food.amount }}
+        {{ order_food.food.name }} - {{ order_food.amount }} шт. * {{ order_food.food.price }} =
+        {% widthratio order_food.amount 1 order_food.food.price %}
+{#        {{ order_food.amount }}  * {{ order_food.food.price }}#}
+        <a href="{% url 'webapp:order_food_update' order_food.pk %}">Редактировать</a>
         <a href="{% url 'webapp:order_food_delete' order_food.pk %}">Удалить</a>
         <br>
     {% endfor %}
