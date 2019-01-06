@@ -22,12 +22,14 @@ def login_view(request):
             login(request, user=user)
             redirect_url = next
             if not redirect_url:
-                redirect_url = reverse('webapp:project_list')
+                redirect_url = reverse('webapp:order_list')
             return HttpResponseRedirect(redirect_url)
+            # return redirect('webapp:order_list')
 
+    # return render(request, 'login.html')
     return render(request, 'login.html', context={'next': request.GET.get('next')})
 
 
 def logout_view(request):
     logout(request)
-    return redirect('login')
+    return redirect('accounts:login')

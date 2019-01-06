@@ -4,64 +4,78 @@ from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
 from webapp.models import Food, Order, OrderFood, Employee
 from webapp.forms import FoodForm, OrderForm, OrderFoodForm
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 
-class UserListView(ListView):
+class UserListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Employee
     template_name = 'user_list.html'
 
-class FoodDetailView(DetailView):
+class FoodDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     model = Food
     template_name = 'food_detail.html'
+    permission_required = 'webapp.view_food'
 
 
-class FoodCreateView(CreateView):
+class FoodCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Food
     template_name = 'food_create.html'
     form_class = FoodForm
+    permission_required = 'webapp.add_food'
 
     def get_success_url(self):
         return reverse('webapp:food_detail', kwargs={'pk': self.object.pk})
 
-class FoodListView(ListView):
+class FoodListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Food
     template_name = 'food_list.html'
+    permission_required = 'webapp.view_food'
 
-class FoodUpdateView(UpdateView):
+class FoodUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Food
     template_name = 'food_update.html'
     form_class = FoodForm
+    permission_required = 'webapp.change_food'
 
     def get_success_url(self):
         return reverse('webapp:food_detail', kwargs={'pk': self.object.pk})
 
-class FoodDeleteView(DeleteView):
+class FoodDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Food
     template_name = 'food_delete.html'
+    permission_required = 'webapp.delete_food'
 
     def get_success_url(self):
         return reverse ('webapp:food_list')
 
 
-class OrderListView(ListView):
+class OrderListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Order
     template_name = 'order_list.html'
+    permission_required = 'webapp.view_order'
 
-class OrderCreateView(CreateView):
+class OrderCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Order
     template_name = 'order_create.html'
     form_class = OrderForm
+    permission_required = 'webapp.add_order'
+
+    def form_valid(self, form):
+        form.instance.operator = self.request.user
+        return super().form_valid(form)
 
     def get_success_url(self):
         return reverse('webapp:order_detail', kwargs={'pk': self.object.pk})
 
-class OrderDetailView(DetailView):
+class OrderDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     model = Order
     template_name = 'order_detail.html'
+    permission_required = 'webapp.view_order'
 
-class OrderCancelView(View):
+class OrderCancelView(LoginRequiredMixin, PermissionRequiredMixin, View):
     model = Order
     template_name = 'order_cancel.html'
+    permission_required = 'webapp.delete_order'
 
     def get(self, request, pk):
         order = get_object_or_404(Order, pk=pk)
@@ -73,35 +87,39 @@ class OrderCancelView(View):
         order.save()
         return redirect('webapp:order_list')
 
-class OrderUpdateView(UpdateView):
+class OrderUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Order
     template_name = 'order_update.html'
     form_class = OrderForm
+    permission_required = 'webapp.change_order'
 
     def get_success_url(self):
         return reverse('webapp:order_detail', kwargs={'pk': self.object.pk})
 
 
 # классовое на базе View
-class OrderDeliverView(View):
+class OrderDeliverView(LoginRequiredMixin, PermissionRequiredMixin, View):
     model = Order
     # template_name = 'order_deliver.html'
+    permission_required = 'webapp.change_order_status'
 
     def get(self, request, pk):
         order = get_object_or_404(Order, pk=pk)
         if order.status == 'preparing':
+            order.courier = request.user
             order.status = 'on_way'
-        elif order.status == 'on_way':
+        elif (order.status == 'on_way') and (order.courier == request.user):
             order.status = 'delivered'
         order.save()
         return redirect('webapp:order_list')
 
 
 
-class OrderFoodCreateView(CreateView):
+class OrderFoodCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = OrderFood
     form_class = OrderFoodForm
     template_name = 'order_food_create.html'
+    permission_required = 'webapp.add_orderfood'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -115,10 +133,11 @@ class OrderFoodCreateView(CreateView):
     def get_success_url(self):
         return reverse('webapp:order_detail', kwargs={'pk': self.object.order.pk})
 
-class OrderFoodUpdateView(UpdateView):
+class OrderFoodUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = OrderFood
     form_class = OrderFoodForm
     template_name = 'order_food_update.html'
+    permission_required = 'webapp.change_orderfood'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -133,9 +152,10 @@ class OrderFoodUpdateView(UpdateView):
         return reverse('webapp:order_detail', kwargs={'pk': self.object.order.pk})
 
 
-class OrderFoodDeleteView(DeleteView):
+class OrderFoodDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = OrderFood
     template_name = 'order_food_delete.html'
+    permission_required = 'webapp.delete_orderfood'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -2,22 +2,24 @@
 {% block title %}Заказ{% endblock %}
 {% block content %}
     <h1 class="mt-3 mb-3">Заказ № {{ order.pk }}</h1>
+    {% if perms.webapp.change_order %}
     <a href="{% url 'webapp:order_update' order.pk %}">Изменить заказ</a>
     <a href="{% url 'webapp:order_cancel' order.pk %}">Отменить заказ</a>
+    {% endif %}
     <h5>Статус: {{ order.get_status_display }}</h5>
     Клиент:
     {{ order.contact_name }}
     {{ order.contact_phone }}
     <br>
     Адрес: {{ order.delivery_address }}
-
+{% if perms.webapp.change_order_status %}
         {% if order.status == 'preparing' %}
         <a href="{% url 'webapp:order_deliver' order.pk %}"> - Взять заказ</a>
         {% elif order.status == 'on_way' %}
         <a href="{% url 'webapp:order_deliver' order.pk %}"> - Доставить заказ</a>
         {% endif %}
 
-
+{% endif %}
 
     <hr>
     Оператор: {{ order.operator.employee.user.first_name }} {{ order.operator.employee.user.last_name }}
@@ -25,15 +27,20 @@
     Курьер: {{ order.courier.employee.user.first_name }} {{ order.courier.employee.user.last_name }}
     <hr>
     <h3>Блюда:</h3>
-    <a href="{% url 'webapp:order_food_create' order.pk %}">Добавить блюда</a>
+
 
     <br>
     {% for order_food in order.foods.all %}
         {{ order_food.food.name }} - {{ order_food.amount }} шт. * {{ order_food.food.price }} =
         {% widthratio order_food.amount 1 order_food.food.price %}
 {#        {{ order_food.amount }}  * {{ order_food.food.price }}#}
+        {% if perms.webapp.change_order %}
         <a href="{% url 'webapp:order_food_update' order_food.pk %}">Редактировать</a>
         <a href="{% url 'webapp:order_food_delete' order_food.pk %}">Удалить</a>
+        {% endif %}
         <br>
     {% endfor %}
+        {% if perms.webapp.change_order %}
+        <a href="{% url 'webapp:order_food_create' order.pk %}">Добавить блюда</a>
+        {% endif %}
 {% endblock %}

@@ -2,7 +2,9 @@
 {% block title %}Список блюд{% endblock %}
 {% block content %}
     <h1 class="mt-3 mb-3">Список блюд</h1>
+    {% if perms.webapp.add_food %}
     <a href="{% url 'webapp:food_create' %}">Добавить блюдо</a>
+    {% endif %}
     {% for food in food_list %}
         <a href="{% url 'webapp:food_detail' food.pk %}">
         <h3>

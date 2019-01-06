@@ -45,6 +45,11 @@ class Order(models.Model):
     def __str__(self):
         return self.contact_phone
 
+    class Meta:
+        permissions = [
+            ('change_order_status', 'Может менять статус заказа'),
+        ]
+
 
 class OrderFood(models.Model):
     order = models.ForeignKey(Order, related_name='foods', verbose_name='Заказ', on_delete=models.CASCADE)

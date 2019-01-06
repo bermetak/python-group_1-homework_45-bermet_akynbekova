@@ -2,8 +2,10 @@
 {% block title %}Блюдо{% endblock %}
 {% block content %}
     <h1 class="mt-3 mb-3">{{ food.name }}</h1>
+    {% if perms.webapp.change_food %}
     <a href="{% url 'webapp:food_update' food.pk %}">Изменить</a>
     <a href="{% url 'webapp:food_delete' food.pk %}">Удалить</a>
+    {% endif %}
     <hr>
     {{ food.price }}
     <hr>
