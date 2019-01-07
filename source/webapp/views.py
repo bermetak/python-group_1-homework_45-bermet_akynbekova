@@ -60,6 +60,7 @@ class OrderCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     form_class = OrderForm
     permission_required = 'webapp.add_order'
 
+
     def form_valid(self, form):
         form.instance.operator = self.request.user
         return super().form_valid(form)
@@ -105,6 +106,7 @@ class OrderDeliverView(LoginRequiredMixin, PermissionRequiredMixin, View):
 
     def get(self, request, pk):
         order = get_object_or_404(Order, pk=pk)
+        print(order.pk)
         if order.status == 'preparing':
             order.courier = request.user
             order.status = 'on_way'
