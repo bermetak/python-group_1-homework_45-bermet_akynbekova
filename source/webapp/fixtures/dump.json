@@ -48,6 +48,15 @@
   }
 },
 {
+  "model": "webapp.orderfood",
+  "pk": 43,
+  "fields": {
+    "order": 12,
+    "food": 3,
+    "amount": 2
+  }
+},
+{
   "model": "auth.permission",
   "pk": 1,
   "fields": {
@@ -642,7 +651,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$120000$O2J5p2ZuWQMW$WMyM1oEWC20b2LA20pEgBXuRhok87uCwJq/jmlSAGDs=",
-    "last_login": "2019-01-07T08:06:10Z",
+    "last_login": "2019-01-20T14:17:00.728Z",
     "is_superuser": true,
     "username": "admin",
     "first_name": "\u0410\u0434\u043c\u0438\u043d",
@@ -725,6 +734,22 @@
     "status": "on_way",
     "operator": [
       "operator"
+    ],
+    "courier": [
+      "admin"
+    ]
+  }
+},
+{
+  "model": "webapp.order",
+  "pk": 12,
+  "fields": {
+    "contact_phone": "0555123456",
+    "contact_name": "User1",
+    "delivery_address": "\u041c\u0430\u043b\u0434\u044b\u0431\u0430\u0435\u0432\u0430, 8/2",
+    "status": "new",
+    "operator": [
+      "admin"
     ],
     "courier": [
       "admin"

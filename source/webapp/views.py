@@ -186,11 +186,6 @@ class OrderFoodAjaxDeleteView(DeleteView):
     model = OrderFood
 
     def delete(self, request, pk):
-        # food_pk = OrderFood.objects.get('pk')
-        # food_pk.delete()
-        # return JsonResponse({
-        #     'pk': food_pk
-        # })
         food = get_object_or_404(OrderFood, pk=pk)
         print(food)
         food.delete()
