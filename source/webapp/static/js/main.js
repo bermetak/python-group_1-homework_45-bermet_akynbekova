@@ -122,7 +122,7 @@ function orderFoodAdd(event) {
 
                 let foodNameSpan = $('<span></span>')
                     .attr('id', 'order_food_name_' + response.pk)
-                    .data('food_pk', response.pk)
+                    .data('food_pk', response.food_pk)
                     .text(response.food_name);
                 let foodAmountSpan = $('<span></span>')
                     .attr('id', 'order_food_amount_' + response.pk)
@@ -131,7 +131,8 @@ function orderFoodAdd(event) {
                     .addClass('edit_link')
                     .attr('href', response.edit_url)
                     .data('pk', response.pk)
-                    .text('Изменить');
+                    .text('Изменить')
+                    .click(editFood);
 
                 let deleteLink = $('<a></a>')
                     .addClass('delete_link')
