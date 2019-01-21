@@ -137,7 +137,8 @@ function orderFoodAdd(event) {
                 let deleteLink = $('<a></a>')
                     .addClass('delete_link')
                     .attr('href', response.delete_url)
-                    .text('Удалить');
+                    .text('Удалить')
+                    .click(deleteFood);
 
                 newFoodLi
                     .attr('id', 'order_food_' + response.pk)
